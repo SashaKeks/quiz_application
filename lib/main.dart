@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:quiz_application/core/depends/main_depends.dart';
 
 void main() {
+  MainDepends.init();
   runApp(const MyApp());
 }
 
