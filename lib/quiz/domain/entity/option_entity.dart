@@ -6,6 +6,6 @@ class OptionEntity {
   OptionEntity({
     required this.id,
     required this.optionText,
-    required this.isCorrect,
+    this.isCorrect = false,
   });
 }

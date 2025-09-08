@@ -4,12 +4,10 @@ class QuizEntity {
   final String id;
   final String name;
   final List<QuestionEntity> questions;
-  final int correctAnswersCount;
 
   QuizEntity({
     required this.id,
     required this.name,
     required this.questions,
-    required this.correctAnswersCount,
   });
 }
