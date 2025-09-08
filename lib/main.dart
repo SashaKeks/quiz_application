@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:quiz_application/core/depends/main_depends.dart';
+import 'package:quiz_application/quiz/domain/usecase/get_history_usecase.dart';
 import 'package:quiz_application/quiz/domain/usecase/get_quiz_usecase.dart';
+import 'package:quiz_application/quiz/domain/usecase/save_history_usecase.dart';
+import 'package:quiz_application/quiz/presentation/bloc/history/history_bloc.dart';
+import 'package:quiz_application/quiz/presentation/bloc/history/history_event.dart';
 import 'package:quiz_application/quiz/presentation/bloc/quiz/quiz_bloc.dart';
 import 'package:quiz_application/quiz/presentation/bloc/quiz/quiz_event.dart';
 import 'package:quiz_application/quiz/presentation/pages/quiz_page.dart';
@@ -44,6 +48,13 @@ class MyApp extends StatelessWidget {
                 (_) =>
                     QuizBloc(GetIt.instance<GetQuizUseCase>())
                       ..add(QuizStarted()),
+          ),
+          BlocProvider(
+            create:
+                (_) => HistoryBloc(
+                  getHistoryUseCase: GetIt.instance<GetHistoryUseCase>(),
+                  saveHistoryUseCase: GetIt.instance<SaveHistoryUseCase>(),
+                )..add(HistoryGetEvent()),
           ),
         ],
         child: const QuizPage(),
