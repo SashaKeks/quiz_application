@@ -5,7 +5,7 @@ import 'package:quiz_application/quiz/data/model/quiz_model.dart';
 
 class QuizLocalDatasource implements QuizDatasourceInterface {
   @override
-  Future<QuizModel> getQuiz() {
+  Future<QuizModel> getQuiz() async {
     return Future.value(
       QuizModel(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
