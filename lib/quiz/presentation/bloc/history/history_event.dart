@@ -12,7 +12,16 @@ class HistoryNewDataSaveEvent extends HistoryEvent {
 
 class HistorySaveEvent extends HistoryEvent {
   final String quizId;
+  final String quizTitle;
   final int score;
+  final int total;
+  final int timestamp;
 
-  HistorySaveEvent({required this.quizId, required this.score});
+  HistorySaveEvent({
+    required this.quizId,
+    required this.quizTitle,
+    required this.score,
+    required this.total,
+    required this.timestamp,
+  });
 }

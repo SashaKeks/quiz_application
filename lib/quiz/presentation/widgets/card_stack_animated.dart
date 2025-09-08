@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quiz_application/quiz/domain/entity/option_entity.dart';
 import 'package:quiz_application/quiz/domain/entity/question_entity.dart';
+import 'package:quiz_application/quiz/presentation/bloc/history/history_bloc.dart';
+import 'package:quiz_application/quiz/presentation/bloc/history/history_event.dart';
 import 'package:quiz_application/quiz/presentation/bloc/quiz/quiz_bloc.dart';
 import 'package:quiz_application/quiz/presentation/bloc/quiz/quiz_event.dart';
 import 'package:quiz_application/quiz/presentation/bloc/quiz/quiz_state.dart';
@@ -112,6 +114,7 @@ class _CardStackAnimatedState extends State<CardStackAnimated>
                 )
               else
                 ResultCard(
+                  quiz: state.quiz,
                   correct: state.correctAnswersCount,
                   total: questions.length,
                 ),
@@ -135,6 +138,7 @@ class _CardStackAnimatedState extends State<CardStackAnimated>
                         answerId,
                         state.isAnimated,
                       );
+                      
                     },
                   ),
                 ),
