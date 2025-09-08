@@ -1,3 +1,5 @@
+import 'package:quiz_application/quiz/domain/entity/option_entity.dart';
+
 class QuizEvent {}
 
 class QuizStarted extends QuizEvent {}
@@ -8,7 +10,7 @@ class QuizNextQuestionEnd extends QuizEvent {}
 
 class QuizAnswered extends QuizEvent {
   final String questionId;
-  final String selectedOptionId;
+  final OptionEntity selectedOption;
 
-  QuizAnswered({required this.questionId, required this.selectedOptionId});
+  QuizAnswered({required this.questionId, required this.selectedOption});
 }
