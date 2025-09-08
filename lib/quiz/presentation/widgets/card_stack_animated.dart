@@ -6,6 +6,7 @@ import 'package:quiz_application/quiz/presentation/bloc/quiz/quiz_bloc.dart';
 import 'package:quiz_application/quiz/presentation/bloc/quiz/quiz_event.dart';
 import 'package:quiz_application/quiz/presentation/bloc/quiz/quiz_state.dart';
 import 'package:quiz_application/quiz/presentation/widgets/question_card.dart';
+import 'package:quiz_application/quiz/presentation/widgets/result_card.dart';
 
 class CardStackAnimated extends StatefulWidget {
   const CardStackAnimated({super.key});
@@ -110,26 +111,9 @@ class _CardStackAnimatedState extends State<CardStackAnimated>
                   ),
                 )
               else
-                SizedBox(
-                  width: 400,
-                  height: 300,
-                  child: Card(
-                    child: Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            "Quiz Completed!",
-                            style: TextStyle(fontSize: 24),
-                          ),
-                          Text(
-                            "Score: ${state.correctAnswersCount}/${state.quiz?.questions.length ?? 0}",
-                            style: TextStyle(fontSize: 20),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                ResultCard(
+                  correct: state.correctAnswersCount,
+                  total: questions.length,
                 ),
               if (currQuestion != null)
                 AnimatedBuilder(
