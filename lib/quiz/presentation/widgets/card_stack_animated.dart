@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:quiz_application/quiz/domain/entity/option_entity.dart';
 import 'package:quiz_application/quiz/domain/entity/question_entity.dart';
-import 'package:quiz_application/quiz/presentation/bloc/quiz_bloc.dart';
-import 'package:quiz_application/quiz/presentation/bloc/quiz_event.dart';
-import 'package:quiz_application/quiz/presentation/bloc/quiz_state.dart';
+import 'package:quiz_application/quiz/presentation/bloc/quiz/quiz_bloc.dart';
+import 'package:quiz_application/quiz/presentation/bloc/quiz/quiz_event.dart';
+import 'package:quiz_application/quiz/presentation/bloc/quiz/quiz_state.dart';
 import 'package:quiz_application/quiz/presentation/widgets/question_card.dart';
 
 class CardStackAnimated extends StatefulWidget {
@@ -18,6 +19,9 @@ class _CardStackAnimatedState extends State<CardStackAnimated>
   late AnimationController _controller;
   late Animation<double> _slide;
   late Animation<double> _rotate;
+  late Animation<double> _fade;
+  late Animation<double> _nextScale;
+
   @override
   void initState() {
     super.initState();
@@ -37,6 +41,16 @@ class _CardStackAnimatedState extends State<CardStackAnimated>
       end: -0.1,
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
 
+    _fade = Tween<double>(
+      begin: 1,
+      end: 0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
+
+    _nextScale = Tween<double>(
+      begin: 0.8,
+      end: 1,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
+
     _controller.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         context.read<QuizBloc>().add(QuizNextQuestionEnd());
@@ -45,10 +59,16 @@ class _CardStackAnimatedState extends State<CardStackAnimated>
     });
   }
 
-  void _onOptionSelected(String optionId, bool isAnimated) {
+  void _onOptionSelected(
+    String questionId,
+    OptionEntity option,
+    bool isAnimated,
+  ) {
     if (isAnimated) return;
-  context.read<QuizBloc>().add(());
-    context.read<QuizBloc>().add(QuizAnswered());
+    context.read<QuizBloc>().add(
+      QuizAnswered(questionId: questionId, selectedOption: option),
+    );
+    context.read<QuizBloc>().add(QuizNextQuestionStart());
     _controller.forward();
   }
 
@@ -71,36 +91,69 @@ class _CardStackAnimatedState extends State<CardStackAnimated>
           }
           final bool hasNext =
               state.currentQuestionIndex < questions.length - 1;
-          final QuestionEntity currQuestion =
-              questions[state.currentQuestionIndex];
+          final bool hasCurrent =
+              state.currentQuestionIndex <= questions.length - 1;
+          final QuestionEntity? currQuestion =
+              hasCurrent ? questions[state.currentQuestionIndex] : null;
+
           final QuestionEntity? nextQuestion =
               hasNext ? questions[state.currentQuestionIndex + 1] : null;
 
           return Stack(
             children: [
               if (hasNext)
-                QuestionCard(
-                  question: nextQuestion!,
-                  onOptionSelected: (answerId) {
-                    _onOptionSelected(answerId, state.isAnimated);
-                  },
+                ScaleTransition(
+                  scale: _nextScale,
+                  child: QuestionCard(
+                    question: nextQuestion!,
+                    onOptionSelected: (answerId) {},
+                  ),
+                )
+              else
+                SizedBox(
+                  width: 400,
+                  height: 300,
+                  child: Card(
+                    child: Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            "Quiz Completed!",
+                            style: TextStyle(fontSize: 24),
+                          ),
+                          Text(
+                            "Score: ${state.correctAnswersCount}/${state.quiz?.questions.length ?? 0}",
+                            style: TextStyle(fontSize: 20),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
-
-              AnimatedBuilder(
-                animation: _controller,
-                builder: (context, child) {
-                  return Transform.translate(
-                    offset: Offset(_slide.value, 0),
-                    child: Transform.rotate(angle: _rotate.value, child: child),
-                  );
-                },
-                child: QuestionCard(
-                  question: currQuestion,
-                  onOptionSelected: (answerId) {
-                    _onOptionSelected(answerId, state.isAnimated);
+              if (currQuestion != null)
+                AnimatedBuilder(
+                  animation: _controller,
+                  builder: (context, child) {
+                    return Transform.translate(
+                      offset: Offset(_slide.value, 0),
+                      child: Transform.rotate(
+                        angle: _rotate.value,
+                        child: Opacity(opacity: _fade.value, child: child),
+                      ),
+                    );
                   },
+                  child: QuestionCard(
+                    question: currQuestion,
+                    onOptionSelected: (answerId) {
+                      _onOptionSelected(
+                        currQuestion.id,
+                        answerId,
+                        state.isAnimated,
+                      );
+                    },
+                  ),
                 ),
-              ),
             ],
           );
         },
