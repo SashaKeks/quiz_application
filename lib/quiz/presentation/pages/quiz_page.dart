@@ -27,11 +27,8 @@ class _QuizPageState extends State<QuizPage> {
         },
         currentIndex: index,
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.quiz), label: 'Home'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.history),
-            label: 'Favorites',
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.quiz), label: 'Quiz'),
+          BottomNavigationBarItem(icon: Icon(Icons.history), label: 'History'),
         ],
       ),
     );
