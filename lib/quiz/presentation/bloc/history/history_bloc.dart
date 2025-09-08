@@ -12,10 +12,9 @@ class HistoryBloc extends Bloc<HistoryEvent, HistoryState> {
     required this.getHistoryUseCase,
     required this.saveHistoryUseCase,
   }) : super(HistoryState(history: [])) {
-    on<HistoryGetEvent>((event, emit) {
-      getHistoryUseCase.call().then((history) {
-        emit(state.copyWith(history: history));
-      });
+    on<HistoryGetEvent>((event, emit) async {
+      final history = await getHistoryUseCase.call();
+      emit(state.copyWith(history: history));
     });
 
     on<HistoryNewDataSaveEvent>((event, emit) {
@@ -25,7 +24,10 @@ class HistoryBloc extends Bloc<HistoryEvent, HistoryState> {
     on<HistorySaveEvent>((event, emit) {
       final historyData = HistoryDataEntity(
         quizId: event.quizId,
+        quizTitle: event.quizTitle,
         score: event.score,
+        total: event.total,
+        timestamp: event.timestamp,
       );
       saveHistoryUseCase.call(historyData).then((_) {
         add(HistoryNewDataSaveEvent(historyData: historyData));
