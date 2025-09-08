@@ -9,7 +9,14 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
   QuizBloc(this.getQuizUseCase) : super(const QuizState()) {
     on<QuizStarted>((event, emit) async {
       final result = await getQuizUseCase();
-      emit(state.copyWith(quiz: () => result));
+      emit(
+        state.copyWith(
+          correctAnswersCount: 0,
+          currentQuestionIndex: 0,
+          isAnimated: false,
+          quiz: () => result,
+        ),
+      );
     });
 
     on<QuizAnswered>((event, emit) {
