@@ -37,13 +37,31 @@ class QuizLocalDatasource implements QuizDatasourceInterface {
             id: "3",
             questionText: "What command creates a new project?",
             options: [
+              OptionModel(id: "3.1", optionText: "flutter start"),
               OptionModel(
-                id: "3.1",
-                optionText: "flutter start",
+                id: "3.2",
+                optionText: "flutter create",
                 isCorrect: true,
               ),
-              OptionModel(id: "3.2", optionText: "flutter create"),
               OptionModel(id: "3.3", optionText: "flutter init"),
+            ],
+          ),
+          QuestionModel(
+            id: "4",
+            questionText: "What is the default package manager for Flutter?",
+            options: [
+              OptionModel(id: "4.1", optionText: "npm"),
+              OptionModel(id: "4.2", optionText: "pub", isCorrect: true),
+              OptionModel(id: "4.3", optionText: "pip"),
+            ],
+          ),
+          QuestionModel(
+            id: "5",
+            questionText: "Which widget is used for layout in Flutter?",
+            options: [
+              OptionModel(id: "5.1", optionText: "Container"),
+              OptionModel(id: "5.2", optionText: "Builder"),
+              OptionModel(id: "5.3", optionText: "Column", isCorrect: true),
             ],
           ),
         ],
